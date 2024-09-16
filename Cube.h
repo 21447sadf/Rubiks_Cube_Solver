@@ -9,7 +9,12 @@ class Cube {
         //Default Constructor
         Cube(std::vector<std::vector<std::vector<char>>> scrambledCube);
 
+        //Return cube structure
         std::vector<std::vector<std::vector<char>>> getCube();
+
+        //Function to rotate any face - excluding all other adjacent faces -
+        //by 90 degrees clockwise
+        void rotateClockWise90(int face);
 
         //Functions to perform rotations on cube
         void rotateFront();
@@ -29,6 +34,12 @@ class Cube {
 
         void rotateRight();
         void rotateRightAC();
+
+        //Get centrepiece of a face 
+        char getCentrePiece(int face);
+
+        //Get piece at specified coordinates (face, row, column) 
+        char getPiece(int face, int row, int col);
 
     private:
         std::vector<std::vector<std::vector<char>>> cube;

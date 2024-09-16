@@ -5,7 +5,7 @@ all: CFOP
 clean:
 	rm -f CFOP *.o
 
-CFOP: CFOP.o Cube.o
+CFOP: CFOP.o Cube.o Cross.o
 	g++ -Wall -Werror -std=c++17 -g -O -o $@ $^
 
 %.o: %.cpp

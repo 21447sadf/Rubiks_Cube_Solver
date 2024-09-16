@@ -7,6 +7,9 @@
 #include "prompts.h"
 #include "Cube.h"
 
+//TESTING FUNCTIONS
+#include "Cross.h"
+
 bool validColour(char colour) {
     char lowerCaseColour = std::tolower(colour);
 
@@ -88,7 +91,7 @@ int main (void) {
         }
         printCube(cube);
         Cube rubiksCube(cube);
-        rubiksCube.rotateRightAC();
+        Cross(rubiksCube);
         printCube(rubiksCube.getCube());
         solved = true;
     }

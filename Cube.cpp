@@ -17,15 +17,26 @@ std::vector<std::vector<std::vector<char>>> Cube::getCube() {
     return this->cube;
 }
 
-void Cube::rotateFront() {
-    //Rotate front 90 degrees by transposing vector
-    for(int i = 0; i < 3; i++) {
-        for(int j = i + 1; j < 3; j++) {
-            char tempVal = cube[4][j][i];
-            cube[4][j][i] = cube[4][i][j];
-            cube[4][i][j] = tempVal;
-        }
+char Cube::getPiece(int face, int row, int col) {
+    return this->cube[face][row][col];
+}
+
+void Cube::rotateClockWise90(int face) {
+    for (int i = 0; i < 3 / 2; i++) { 
+        for (int j = i; j < (3 - i - 1); j++) { 
+            // Swapping elements after each iteration in Clockwise direction
+                int temp= cube[face][i][j]; 
+                cube[face][i][j] = cube[face][2 - j][i]; 
+                cube[face][2 - j][i] = cube[face][2 - i][2 - j]; 
+                cube[face][2 - i][2 - j] = cube[face][j][2 - i]; 
+                cube[face][j][2 - i] = temp; 
+        } 
     }
+} 
+
+void Cube::rotateFront() {
+    //Rotate front by 90 degrees
+    rotateClockWise90(4);
 
     //Get rows to rotate along with face
     std::vector<char> topRow = cube[0][2];
@@ -40,9 +51,9 @@ void Cube::rotateFront() {
     cube[3][2][0] = topRow[2];
 
     //RIGHT -> BOTTOM
-    cube[1][0][0] = rightRow[0];
+    cube[1][0][0] = rightRow[2];
     cube[1][0][1] = rightRow[1];
-    cube[1][0][2] = rightRow[2];
+    cube[1][0][2] = rightRow[0];
 
     //BOTTOM -> LEFT
     cube[2][0][2] = bottomRow[0];
@@ -50,9 +61,9 @@ void Cube::rotateFront() {
     cube[2][2][2] = bottomRow[2];
 
     //LEFT -> TOP
-    cube[0][2][0] = leftRow[0];
+    cube[0][2][0] = leftRow[2];
     cube[0][2][1] = leftRow[1];
-    cube[0][2][2] = leftRow[2];
+    cube[0][2][2] = leftRow[0];
 }
 
 void Cube::rotateFrontAC() {
@@ -63,14 +74,8 @@ void Cube::rotateFrontAC() {
 }
 
 void Cube::rotateBack() {
-    //Rotate back by 90 degrees by transposing vector
-    for(int i = 0; i < 3; i++) {
-        for(int j = i + 1; j < 3; j++) {
-            char tempVal = cube[5][j][i];
-            cube[5][j][i] = cube[5][i][j];
-            cube[5][i][j] = tempVal;
-        }
-    }
+    //Rotate back by 90 degrees clockwise
+    rotateClockWise90(5);
 
     //Get rows to rotate along with face
     std::vector<char> topRow = cube[0][0];
@@ -79,25 +84,25 @@ void Cube::rotateBack() {
     std::vector<char> leftRow = {cube[2][0][0], cube[2][1][0], cube[2][2][0]};
 
     //Shift rows around cube 
-    //TOP -> RIGHT
-    cube[3][0][2] = topRow[0];
-    cube[3][1][2] = topRow[1];
-    cube[3][2][2] = topRow[2];
+    //TOP -> LEFT
+    cube[2][0][0] = topRow[2];
+    cube[2][1][0] = topRow[1];
+    cube[2][2][0] = topRow[0];
 
-    //RIGHT -> BOTTOM
-    cube[1][2][0] = rightRow[0];
-    cube[1][2][1] = rightRow[1];
-    cube[1][2][2] = rightRow[2];
+    //RIGHT -> TOP
+    cube[0][0][0] = rightRow[0];
+    cube[0][0][1] = rightRow[1];
+    cube[0][0][2] = rightRow[2];
 
-    //BOTTOM -> LEFT
-    cube[2][0][0] = bottomRow[0];
-    cube[2][1][0] = bottomRow[1];
-    cube[2][2][0] = bottomRow[2];
+    //BOTTOM -> RIGHT
+    cube[3][0][2] = bottomRow[2];
+    cube[3][1][2] = bottomRow[1];
+    cube[3][2][2] = bottomRow[0];
 
-    //LEFT -> TOP
-    cube[0][0][0] = leftRow[0];
-    cube[0][0][1] = leftRow[1];
-    cube[0][0][2] = leftRow[2];
+    //LEFT -> BOTTOM
+    cube[1][2][0] = leftRow[0];
+    cube[1][2][1] = leftRow[1];
+    cube[1][2][2] = leftRow[2];
 }
 
 void Cube::rotateBackAC() {
@@ -108,14 +113,8 @@ void Cube::rotateBackAC() {
 }
 
 void Cube::rotateTop() {
-    //Rotate top by 90 degrees by transposing vector
-    for(int i = 0; i < 3; i++) {
-        for(int j = i + 1; j < 3; j++) {
-            char tempVal = cube[0][j][i];
-            cube[0][j][i] = cube[0][i][j];
-            cube[0][i][j] = tempVal;
-        }
-    }
+    //Rotate top face by 90 degrees
+    rotateClockWise90(0);
 
     //Get rows to rotate along with face
     std::vector<char> backRow = cube[5][0];
@@ -145,14 +144,8 @@ void Cube::rotateTopAC() {
 }
 
 void Cube::rotateBottom() {
-    //Rotate bottom by 90 degrees by transposing vector
-    for(int i = 0; i < 3; i++) {
-        for(int j = i + 1; j < 3; j++) {
-            char tempVal = cube[1][j][i];
-            cube[1][j][i] = cube[1][i][j];
-            cube[1][i][j] = tempVal;
-        }
-    }
+    //Rotate bottom by 90 degrees
+    rotateClockWise90(1);
 
     //Get rows to rotate along with face
     std::vector<char> backRow = cube[5][2];
@@ -161,17 +154,17 @@ void Cube::rotateBottom() {
     std::vector<char> leftRow = cube[2][2];
 
     //Shift rows around cube
-    //BACK -> RIGHT
-    cube[3][2] = backRow;
+    //BACK -> LEFT
+    cube[2][2] = backRow;
 
-    //RIGHT -> FRONT
-    cube[4][2] = rightRow;
+    //RIGHT -> BACK
+    cube[5][2] = rightRow;
 
-    //FRONT -> LEFT
-    cube[2][2] = frontRow;
+    //FRONT -> RIGHT
+    cube[3][2] = frontRow;
 
-    //LEFT -> BACK
-    cube[5][2] = leftRow;
+    //LEFT -> FRONT
+    cube[4][2] = leftRow;
 }
 
 void Cube::rotateBottomAC() {
@@ -182,14 +175,8 @@ void Cube::rotateBottomAC() {
 }
 
 void Cube::rotateLeft() {
-    //Rotate left by 90 degrees by transposing vector
-    for(int i = 0; i < 3; i++) {
-        for(int j = i + 1; j < 3; j++) {
-            char tempVal = cube[2][j][i];
-            cube[2][j][i] = cube[2][i][j];
-            cube[2][i][j] = tempVal;
-        }
-    }
+    //Rotate left face by 90 degrees
+    rotateClockWise90(2);
 
     //Get rows to rotate along with face
     std::vector<char> topRow = {cube[0][0][0], cube[0][1][0], cube[0][2][0]};
@@ -209,14 +196,14 @@ void Cube::rotateLeft() {
     cube[1][2][0] = frontRow[2];
 
     //BOTTOM -> BACK
-    cube[5][0][2] = bottomRow[0];
+    cube[5][2][2] = bottomRow[0];
     cube[5][1][2] = bottomRow[1];
-    cube[5][2][2] = bottomRow[2];
+    cube[5][0][2] = bottomRow[2];
 
     //BACK -> TOP
-    cube[0][0][0] = backRow[0];
+    cube[0][2][0] = backRow[0];
     cube[0][1][0] = backRow[1];
-    cube[0][2][0] = backRow[2];
+    cube[0][0][0] = backRow[2];
 }
 
 void Cube::rotateLeftAC() {
@@ -227,14 +214,8 @@ void Cube::rotateLeftAC() {
 }
 
 void Cube::rotateRight() {
-    //Rotate left by 90 degrees by transposing vector
-    for(int i = 0; i < 3; i++) {
-        for(int j = i + 1; j < 3; j++) {
-            char tempVal = cube[3][j][i];
-            cube[3][j][i] = cube[3][i][j];
-            cube[3][i][j] = tempVal;
-        }
-    }
+    //Rotate right face by 90 degrees
+    rotateClockWise90(3);
 
     //Get rows to rotate along with face
     std::vector<char> topRow = {cube[0][0][2], cube[0][1][2], cube[0][2][2]};
@@ -269,4 +250,22 @@ void Cube::rotateRightAC() {
     rotateRight();
     rotateRight();
     rotateRight();
+}
+
+char Cube::getCentrePiece(int face) {
+    char piece;
+    switch (face) {
+        case 0:
+            piece = 'Y';
+        case 1:
+            piece = 'W';
+        case 2:
+            piece = 'O';
+        case 3:
+            piece = 'R';
+        case 5:
+            piece = 'G';
+    }
+
+    return piece;
 }
